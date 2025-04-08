@@ -9,14 +9,14 @@
 
 <header class="header">
     <nav>
-        <button id="home-nav">Accueil</button>
-        <button id="new-note-nav">Nouvelle Note</button>
-        <button id="tags-nav">Tags</button>
+        <a routerLink="/tags" >Acceuil</a>
+        <a routerLink="/notes" >Nouvelle Note</a>
+        <a routerLink="/tags" >Tags</a>
       </nav>
 </header>
 
 <main class="main">
-    <RouterOutlet></RouterOutlet>
+    <router-outlet></router-outlet>
 </main>
 
 <footer class="footer">
