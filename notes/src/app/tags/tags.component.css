@@ -1,0 +1,57 @@
+a {
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+  a:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+  }
+
+
+  /* Tags Editor Screen */
+  ul {
+    width: 100%; /* Use full width */
+    margin-bottom: 20px; /* Add space after tags list */
+  }
+  ul > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    width: 100%; /* Use full width */
+  }
+  ul input[type="text"] {
+    flex-grow: 1; /* Allow input to grow */
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  ul input[type="text"]:focus {
+    border-color: #bbb;
+  }
+  #back-from-tags {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    margin-top: 20px; /* Add more space above button */
+    display: block; /* Make it a block element */
+  }
+  #back-from-tags:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+  }

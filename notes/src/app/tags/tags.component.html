@@ -1,1 +1,11 @@
-<p>tags works!</p>
+<ul>
+    @for(tag of tags; track $index){
+        <li>{{tag.name}}</li>
+    }@empty {
+        <li>No tags available</li>
+    }
+
+   
+</ul>
+
+<a (click)="dialogAddTag()" class="add-tag-link" >Ajouter une nouvelle étiquette</a>
