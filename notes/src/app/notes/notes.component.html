@@ -1,0 +1,100 @@
+@if (editing) {
+    <form (ngSubmit)="EditingNote()">
+      <label>
+        Nom :
+        <input type="text" name="name" [(ngModel)]="editing.title" required />
+      </label>
+      <label>
+        Couleur :
+        <input type="color" name="color" [(ngModel)]="editing.color" />
+      </label>
+      <label>
+        Type de contenu :
+        <select [(ngModel)]="editing.isChecklist" name="isChecklist">
+          <option [value]="false">Texte</option>
+          <option [value]="true">Checklist</option>
+        </select>
+      </label>
+      <div *ngIf="!editing.isChecklist">
+        <label>
+          Contenu :
+          <textarea name="content" [(ngModel)]="editing.content" rows="4"></textarea>
+        </label>
+      </div>
+      <div *ngIf="editing.isChecklist">
+        <label>
+          Checklist :
+          <div *ngFor="let item of editing.checklist; let idx = index">
+            <input type="text" [(ngModel)]="editing.checklist[idx]" placeholder="Élément de la checklist" />
+            <button type="button" (click)="removeChecklistItem(idx)">Supprimer</button>
+          </div>
+          <button type="button" (click)="addChecklistItem()">Ajouter un élément</button>
+        </label>
+      </div>
+      <button type="submit">Valider</button>
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    </form>
+}
+
+<ul>
+    @for(note of notes; track $index){
+        <li><app-note 
+            [id]="note.id" 
+            [name]="note.title" 
+            [color]="note.color" 
+            [isChecklist]="note.isChecklist"
+            [checklist]="note.checklist"
+            [checked]="note.checked"
+            [content]="note.content"
+            ></app-note></li>
+        <div class="note-actions">
+            <button (click)="editNote(note)">Modifier</button>
+            <button (click)="deleteNote(note)">Supprimer</button>
+        </div>
+    }@empty {
+        <li>No notes available</li>
+    }
+
+</ul>
+
+<a (click)="dialogAddNote()">Ajouter une nouvelle Note</a>
+@if(creating){
+  <div class="dialog">
+    <h2>Ajouter une nouvelle Note</h2>
+    <form (ngSubmit)="submitNote(creating)">
+      <label>
+        Nom :
+        <input type="text" name="name" [(ngModel)]="creating.title" required />
+      </label>
+      <label>
+        Couleur :
+        <input type="color" name="color" [(ngModel)]="creating.color" />
+      </label>
+      <label>
+        Type de contenu :
+        <select [(ngModel)]="creating.isChecklist" name="isChecklist">
+          <option [value]="false">Texte</option>
+          <option [value]="true">Checklist</option>
+        </select>
+      </label>
+      <div *ngIf="!creating.isChecklist">
+        <label>
+          Contenu :
+          <textarea name="content" [(ngModel)]="creating.content" rows="4"></textarea>
+        </label>
+      </div>
+      <div *ngIf="creating.isChecklist">
+        <label>
+          Checklist :
+          <div *ngFor="let item of creating.checklist; let idx = index">
+            <input type="text" [(ngModel)]="creating.checklist[idx]" placeholder="Élément de la checklist" />
+            <button type="button" (click)="removeChecklistItem(idx)">Supprimer</button>
+          </div>
+          <button type="button" (click)="addChecklistItem()">Ajouter un élément</button>
+        </label>
+      </div>
+      <button type="submit">Valider</button>
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    </form>
+  </div>
+}

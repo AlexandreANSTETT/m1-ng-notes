@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Tag } from './tag.model';
+import { Note } from './note.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,4 +37,35 @@ export class StorageService {
       this.saveTags(tags);
     }
   }
+
+  getNotes(): Note[] {
+    return JSON.parse(localStorage.getItem('notes') || '[]');
+  }
+
+  saveNote(note: Note): void {
+    const notes = this.getNotes();
+    notes.push(note);
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }
+
+  deleteNote(id: number): void {
+    const noste = this.getNotes();
+    const updatedNotes = noste.filter(notes => notes.id !== id);
+    this.saveNotes(updatedNotes);
+  }
+
+  saveNotes(notes: Note[]): void {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }
+
+  updateNote(updatedNote: Note): void {
+    const notes = this.getNotes();
+    const index = notes.findIndex(note => note.id === updatedNote.id);
+    if (index !== -1) {
+      notes[index] = updatedNote;
+      this.saveNotes(notes);
+    }
+  }
+
+
 }

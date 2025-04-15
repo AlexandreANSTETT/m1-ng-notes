@@ -1,0 +1,12 @@
+<div [style.background-color]="color">
+    <p>{{ name }}</p>
+    <div *ngIf="isChecklist; else contentTemplate">
+        <div *ngFor="let item of checklist; let idx = index">
+            <p>{{ item }}</p>
+            <input type="checkbox" [(ngModel)]="checked[idx]" />
+        </div>
+    </div>
+    <ng-template #contentTemplate>
+        <p>{{ content }}</p>
+    </ng-template>
+</div>
