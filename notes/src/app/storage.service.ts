@@ -17,4 +17,23 @@ export class StorageService {
     tags.push(tag);
     localStorage.setItem('tags', JSON.stringify(tags));
   }
+
+  deleteTag(id: number): void {
+    const tags = this.getTags();
+    const updatedTags = tags.filter(tag => tag.id !== id);
+    this.saveTags(updatedTags);
+  }
+
+  saveTags(tags: Tag[]): void {
+    localStorage.setItem('tags', JSON.stringify(tags));
+  }
+
+  updateTag(updatedTag: Tag): void {
+    const tags = this.getTags();
+    const index = tags.findIndex(tag => tag.id === updatedTag.id);
+    if (index !== -1) {
+      tags[index] = updatedTag;
+      this.saveTags(tags);
+    }
+  }
 }

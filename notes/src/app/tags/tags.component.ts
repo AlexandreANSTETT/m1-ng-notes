@@ -1,36 +1,73 @@
 import { Component } from '@angular/core';
 import { StorageService } from '../storage.service';
 import { Tag } from '../tag.model';
+import { TagComponent } from '../tag/tag.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-tags',
-  imports: [],
+  imports: [TagComponent,FormsModule],
   templateUrl: './tags.component.html',
   styleUrl: './tags.component.css'
 })
 export class TagsComponent {
 
-  private loaded:boolean = false;
-  public tags:Tag[] = [];
-
-  constructor(private storage: StorageService) {
-    this.loadTags();
+  loaded: boolean = false;
+  tags: Tag[] = [];
+  creating: Tag | null = null;
+  editing: Tag | null = null;
+  constructor(
+    private storageService: StorageService,
+  ) {
+    if (this.loaded) {
+      return;
+    }
+    this.loaded = true;
+    this.tags = this.storageService.getTags();
   }
 
-  loadTags() {
-    if(!this.loaded) {
-      this.tags = this.storage.getTags();
-      this.loaded = true;
-    }
+  ngOnInit(): void {}
+
+  dialogAddTag(): boolean {
+    this.creating = { id: Date.now(), name: '', color: '#888888' };
+    return false;
   }
 
-  dialogAddTag() {
-    const tagName = window.prompt("Entrez le nom de la nouvelle étiquette :");
-    if (tagName && tagName.trim() !== "") {
-      const newTag: Tag = { name: tagName.trim() , color :"Red", id: this.tags.length }; // Supposons que Tag a une propriété `name`
-      this.storage.saveTag(newTag); // Méthode fictive pour enregistrer le tag
-      this.tags.push(newTag); // Mettre à jour la liste des tags
+  deleteTag(tag: Tag): boolean {
+    this.storageService.deleteTag(tag.id);
+    this.tags = this.storageService.getTags();
+    return false;
+  }
+
+  EditingTag(): void {
+    if (!this.editing) return;
+
+    this.storageService.updateTag(this.editing);
+
+    this.tags = this.storageService.getTags();
+    this.editing = null;
+  }
+
+  cancelEdit(): void {
+    this.editing = null;
+    this.creating = null;
+  }
+
+  editTag(tag: Tag): void {
+    this.editing = tag;
+  }
+
+  submitTag(tag: Tag): boolean {
+    if (!tag) return false;
+    if (this.creating) {
+      this.creating = null;
+      this.storageService.saveTag(tag);
+    } else if (this.editing) {
+      this.editing = null;
+      this.storageService.updateTag(tag);
     }
+    this.tags = this.storageService.getTags();
+    return false;
   }
 
 }

@@ -1,6 +1,26 @@
+@if (editing) {
+    <form (ngSubmit)="EditingTag()">
+      <label>
+        Nom :
+        <input type="text" name="name" [(ngModel)]="editing.name" required />
+      </label>
+      <label>
+        Couleur :
+        <input type="color" name="color" [(ngModel)]="editing.color" />
+      </label>
+    
+      <button type="submit">Valider</button>
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    </form>
+    }
+
 <ul>
     @for(tag of tags; track $index){
-        <li>{{tag.name}}</li>
+        <li><app-tag [id]="tag.id" [name]="tag.name" [color]="tag.color"></app-tag></li>
+        <div class="tag-actions">
+            <button (click)="editTag(tag)">Modifier</button>
+            <button (click)="deleteTag(tag)">Supprimer</button>
+        </div>
     }@empty {
         <li>No tags available</li>
     }
@@ -8,4 +28,22 @@
    
 </ul>
 
-<a (click)="dialogAddTag()" class="add-tag-link" >Ajouter une nouvelle étiquette</a>
+<a (click)="dialogAddTag()">Ajouter une nouvelle étiquette</a>
+@if(creating){
+  <div class="dialog">
+    <h2>Ajouter une nouvelle étiquette</h2>
+    <form (ngSubmit)="submitTag(creating)">
+      <label>
+        Nom :
+        <input type="text" name="name" [(ngModel)]="creating.name" required />
+      </label>
+      <label>
+        Couleur :
+        <input type="color" name="color" [(ngModel)]="creating.color" />
+      </label>
+
+      <button type="submit">Valider</button>
+      <button type="button" (click)="cancelEdit()">Annuler</button>
+    </form>
+  </div>
+}
