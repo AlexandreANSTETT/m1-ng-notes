@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Note } from '../note.model';
 import { NoteComponent } from '../note/note.component';
 import { NgFor, NgIf } from '@angular/common';
+import { Tag } from '../tag.model';
 
 @Component({
   selector: 'app-notes',
@@ -16,6 +17,9 @@ export class NotesComponent {
   notes: Note[] = [];
   creating: Note | null = null;
   editing: Note | null = null;
+  availableTags: Tag[] = []; // Liste des tags disponibles
+  selectedTagId: number | null = null; // ID du tag sélectionné pour ajout
+  newChecklistItem: string = ""; // Stocke temporairement le nom du nouvel élément de checklist
 
   constructor(
     private storageService: StorageService,
@@ -25,6 +29,7 @@ export class NotesComponent {
     }
     this.loaded = true;
     this.notes = this.storageService.getNotes();
+    this.availableTags = this.storageService.getTags(); // Récupère les tags depuis le localStorage
   }
 
   ngOnInit(): void {}
@@ -82,10 +87,15 @@ export class NotesComponent {
     }
 
     addChecklistItem(): void {
-      if (this.creating) {
-        this.creating.checklist.push('');
-      } else if (this.editing) {
-        this.editing.checklist.push('');
+      if (this.newChecklistItem.trim() !== "") {
+        if (this.creating) {
+          this.creating.checklist.push(this.newChecklistItem.trim());
+        } else if (this.editing) {
+          this.editing.checklist.push(this.newChecklistItem.trim());
+        }
+        this.newChecklistItem = ""; // Réinitialise le champ après ajout
+      } else {
+        console.warn("Le nom de l'élément de checklist est vide !");
       }
     }
     
@@ -94,6 +104,32 @@ export class NotesComponent {
         this.creating.checklist.splice(index, 1);
       } else if (this.editing) {
         this.editing.checklist.splice(index, 1);
+      }
+    }
+
+    addTagToNote(): void {
+      if (!this.selectedTagId) return;
+  
+      const tagToAdd = this.availableTags.find(tag => tag.id === this.selectedTagId);
+      if (tagToAdd) {
+        if (this.creating) {
+          if (!this.creating.tags.some(tag => tag.id === tagToAdd.id)) {
+            this.creating.tags.push(tagToAdd);
+          }
+        } else if (this.editing) {
+          if (!this.editing.tags.some(tag => tag.id === tagToAdd.id)) {
+            this.editing.tags.push(tagToAdd);
+          }
+        }
+      }
+      this.selectedTagId = null; // Réinitialise la sélection
+    }
+  
+    removeTagFromNote(tagIndex: number): void {
+      if (this.creating) {
+        this.creating.tags.splice(tagIndex, 1);
+      } else if (this.editing) {
+        this.editing.tags.splice(tagIndex, 1);
       }
     }
 

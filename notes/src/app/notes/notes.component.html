@@ -15,12 +15,6 @@
           <option [value]="true">Checklist</option>
         </select>
       </label>
-      <div *ngIf="!editing.isChecklist">
-        <label>
-          Contenu :
-          <textarea name="content" [(ngModel)]="editing.content" rows="4"></textarea>
-        </label>
-      </div>
       <div *ngIf="editing.isChecklist">
         <label>
           Checklist :
@@ -28,7 +22,24 @@
             <input type="text" [(ngModel)]="editing.checklist[idx]" placeholder="Élément de la checklist" />
             <button type="button" (click)="removeChecklistItem(idx)">Supprimer</button>
           </div>
-          <button type="button" (click)="addChecklistItem()">Ajouter un élément</button>
+          <div>
+            <input type="text" [(ngModel)]="newChecklistItem" placeholder="Nouvel élément" />
+            <button type="button" (click)="addChecklistItem()">Ajouter</button>
+          </div>
+        </label>
+      </div>
+      <div>
+        <label>
+          Tags :
+          <div *ngFor="let tag of editing.tags; let idx = index">
+            <span>{{ tag.name }}</span>
+            <button type="button" (click)="removeTagFromNote(idx)">Supprimer</button>
+          </div>
+          <select [(ngModel)]="selectedTagId">
+            <option [value]="null" disabled selected>Choisir un tag</option>
+            <option *ngFor="let tag of availableTags" [value]="tag.id">{{ tag.name }}</option>
+          </select>
+          <button type="button" (click)="addTagToNote()">Ajouter un tag</button>
         </label>
       </div>
       <button type="submit">Valider</button>
@@ -58,7 +69,7 @@
 </ul>
 
 <a (click)="dialogAddNote()">Ajouter une nouvelle Note</a>
-@if(creating){
+@if(creating) {
   <div class="dialog">
     <h2>Ajouter une nouvelle Note</h2>
     <form (ngSubmit)="submitNote(creating)">
@@ -90,7 +101,24 @@
             <input type="text" [(ngModel)]="creating.checklist[idx]" placeholder="Élément de la checklist" />
             <button type="button" (click)="removeChecklistItem(idx)">Supprimer</button>
           </div>
-          <button type="button" (click)="addChecklistItem()">Ajouter un élément</button>
+          <div>
+            <input type="text" [(ngModel)]="newChecklistItem" placeholder="Nouvel élément" />
+            <button type="button" (click)="addChecklistItem()">Ajouter</button>
+          </div>
+        </label>
+      </div>
+      <div>
+        <label>
+          Tags :
+          <div *ngFor="let tag of creating.tags; let idx = index">
+            <span>{{ tag.name }}</span>
+            <button type="button" (click)="removeTagFromNote(idx)">Supprimer</button>
+          </div>
+          <select [(ngModel)]="selectedTagId">
+            <option [value]="null" disabled selected>Choisir un tag</option>
+            <option *ngFor="let tag of availableTags" [value]="tag.id">{{ tag.name }}</option>
+          </select>
+          <button type="button" (click)="addTagToNote()">Ajouter un tag</button>
         </label>
       </div>
       <button type="submit">Valider</button>
